@@ -26,7 +26,7 @@
 <style>
     .main-content {
         padding: 40px 20px;
-        background-color: #f8fafc; /* Tom cinza-claro corporativo */
+        background-color: #f8fafc;
     }
 
     .content-container {
@@ -115,7 +115,6 @@
         background-color: #f1f5f9; 
     }
 
-    /* Elementos Formatados */
     .excel-link {
         color: #0056b3;
         text-decoration: none;
@@ -126,7 +125,6 @@
         text-decoration: underline;
     }
 
-    /* Loading State */
     .loading {
         padding: 40px;
         text-align: center;
@@ -137,15 +135,9 @@
         justify-content: center;
         gap: 10px;
     }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
 </style>
 
 <script>
-    // Configura o carregamento da planilha assim que o body entra na tela
     (function() {
         const excelFile = 'dados.xlsx'; 
 
@@ -173,18 +165,23 @@
             }
         }
 
-        function formatCellValue(value) {
+        // Nova lógica: Recebe também o nome da coluna para decidir como formatar
+        function formatCellValue(value, columnName) {
             if (value === undefined || value === null) return '';
 
             const stringValue = String(value).trim();
+            
+            // 1. Identifica hiperlinks automaticamente
             if (stringValue.startsWith('http://') || stringValue.startsWith('https://')) {
                 return `<a href="${stringValue}" target="_blank" class="excel-link">Acessar Link</a>`;
             }
 
-            if (typeof value === 'number') {
+            // 2. Se for número e a coluna for especificamente "Valor Anunciado", formata como Moeda (R$)
+            if (typeof value === 'number' && columnName === 'Valor Anunciado') {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
 
+            // 3. Para as demais colunas (incluindo "QTD"), retorna o valor normal/original
             return value;
         }
 
@@ -195,7 +192,7 @@
             head.innerHTML = "";
             body.innerHTML = "";
 
-            const headers = data[0];
+            const headers = data[0]; // Linha dos títulos das colunas
             let headRow = "<tr>";
             headers.forEach(header => {
                 headRow += `<th>${header || ''}</th>`;
@@ -206,7 +203,10 @@
             for (let i = 1; i < data.length; i++) {
                 let bodyRow = "<tr>";
                 for (let j = 0; j < headers.length; j++) {
-                    bodyRow += `<td>${formatCellValue(data[i][j])}</td>`;
+                    const currentHeaderName = String(headers[j]).trim();
+                    // Passa o valor da célula e o nome da coluna correspondente
+                    const formattedValue = formatCellValue(data[i][j], currentHeaderName);
+                    bodyRow += `<td>${formattedValue}</td>`;
                 }
                 bodyRow += "</tr>";
                 body.innerHTML += bodyRow;

@@ -2,12 +2,12 @@
     <div class="header-container">
         <div class="logo-area">
             <a href="https://www.iastech.com/" target="_blank">
-                <span class="logo-text">IAS<span class="logo-highlight">TECH</span></span>
+                <img src="https://www.iastech.com/wp-content/uploads/2020/12/logo-iastech-en-footer.png" alt="Logo IASTECH" class="logo-img">
             </a>
         </div>
 
         <nav class="navigation-menu">
-            <a href="https://www.iastech.com/quem-somos/" target="_blank" class="nav-link">Sobre a IASTECH</a>
+            <a href="https://www.iastech.com/empresa/" target="_blank" class="nav-link">Sobre a IASTECH</a>
             <a href="#excel-table" class="nav-link">Planilha de Estoque</a>
             <a href="https://www.iastech.com/contato/" target="_blank" class="nav-link btn-contact">Contato</a>
         </nav>
@@ -33,18 +33,18 @@
         align-items: center;
     }
 
-    /* Estilização provisória do Logo em Texto (mude para <img> se preferir) */
+    /* Dimensionamento e ajuste da Imagem do Logo */
+    .logo-area display: flex;
     .logo-area a {
+        display: flex;
+        align-items: center;
         text-decoration: none;
     }
-    .logo-text {
-        font-size: 24px;
-        font-weight: 800;
-        color: #0f172a; /* Preto azulado */
-        letter-spacing: -0.5px;
-    }
-    .logo-highlight {
-        color: #0056b3; /* Azul IASTECH */
+    .logo-img {
+        height: 45px; /* Altura ideal para manter o cabeçalho proporcional e elegante */
+        width: auto;
+        display: block;
+        object-fit: contain;
     }
 
     /* Menu de Navegação */
@@ -56,7 +56,7 @@
 
     .nav-link {
         text-decoration: none;
-        color: #334155; /* Cinza escuro */
+        color: #334155; /* Cinza escuro corporativo */
         font-weight: 600;
         font-size: 15px;
         transition: color 0.2s ease;
@@ -66,7 +66,7 @@
         color: #0056b3; /* Azul IASTECH no Hover */
     }
 
-    /* Botão de Contato em Destaque (igual o botão preto da imagem que você enviou) */
+    /* Botão de Contato em Destaque */
     .nav-link.btn-contact {
         background-color: #0f172a; /* Preto fosco elegante */
         color: #ffffff;
@@ -84,7 +84,7 @@
         transform: scale(0.98);
     }
 
-    /* Responsividade para telas menores */
+    /* Responsividade para telas menores (Dispositivos Móveis) */
     @media (max-width: 768px) {
         .header-container {
             flex-direction: column;
@@ -94,6 +94,9 @@
             gap: 15px;
             flex-wrap: wrap;
             justify-content: center;
+        }
+        .logo-img {
+            height: 40px; /* Reduz levemente o logo no mobile */
         }
     }
 </style>
