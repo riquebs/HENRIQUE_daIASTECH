@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IASTECH - Painel de Controle</title>
+    <style>
+        /* Estilos globais para garantir que não haja margens indesejadas */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1; /* Garante que o rodapé fique sempre embaixo se houver pouca linha */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-container"></div>
+    <main id="body-container"></main>
+    <div id="footer-container"></div>
+
+    <script>
+        // Função para carregar componentes HTML dinamicamente
+        async function loadComponent(elementId, filePath) {
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error(`Erro ao carregar ${filePath}`);
+                const html = await response.text();
+                document.getElementById(elementId).innerHTML = html;
+
+                // ATENÇÃO: Se o componente carregado tiver tags <script>, precisamos executá-las manualmente
+                if (elementId === 'body-container') {
+                    executeScripts(document.getElementById(elementId));
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // Função auxiliar para fazer o JavaScript do arquivo body.html funcionar após o fetch
+        function executeScripts(container) {
+            const scripts = container.querySelectorAll("script");
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement("script");
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
+        }
+
+        // Carrega todos os componentes ao iniciar a página
+        window.onload = function() {
+            loadComponent('header-container', 'header.html');
+            loadComponent('body-container', 'body.html');
+            // loadComponent('footer-container', 'footer.html'); // Ativaremos assim que criarmos o footer!
+        };
+    </script>
+</body>
+</html>

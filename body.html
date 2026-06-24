@@ -1,0 +1,241 @@
+<section class="main-content">
+    <div class="content-container">
+        <div class="content-header">
+            <h2>📊 Consulta de Estoque Online</h2>
+            <p>Visualize e pesquise as informações atualizadas de estoque. Os dados abaixo são de caráter consultivo e não editáveis.</p>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" id="search" onkeyup="filterTable()" placeholder="Digite termos chave para filtrar (Ex: Nome, Código, Status)...">
+        </div>
+
+        <div class="table-container">
+            <div id="loading" class="loading">
+                <span class="spinner"></span> Carregando dados da planilha...
+            </div>
+            <table id="excel-table" style="display: none;">
+                <thead id="table-head"></thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+    .main-content {
+        padding: 40px 20px;
+        background-color: #f8fafc; /* Tom cinza-claro corporativo */
+    }
+
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .content-header {
+        margin-bottom: 25px;
+    }
+
+    .content-header h2 {
+        font-size: 24px;
+        color: #0f172a;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .content-header p {
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    /* Barra de Pesquisa */
+    .search-box {
+        margin-bottom: 20px;
+    }
+
+    #search {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 15px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #search:focus {
+        border-color: #0056b3;
+        box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
+    }
+
+    /* Container da Tabela */
+    .table-container {
+        overflow-x: auto;
+        background: #ffffff;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    th, td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 14px 16px;
+        text-align: center; 
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    th {
+        background-color: #f1f5f9;
+        color: #334155;
+        font-weight: 700;
+        position: sticky;
+        top: 0;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:nth-child(even) { 
+        background-color: #f8fafc; 
+    }
+
+    tr:hover { 
+        background-color: #f1f5f9; 
+    }
+
+    /* Elementos Formatados */
+    .excel-link {
+        color: #0056b3;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .excel-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Loading State */
+    .loading {
+        padding: 40px;
+        text-align: center;
+        font-style: italic;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<script>
+    // Configura o carregamento da planilha assim que o body entra na tela
+    (function() {
+        const excelFile = 'dados.xlsx'; 
+
+        async function loadExcel() {
+            try {
+                const response = await fetch(excelFile);
+                if (!response.ok) throw new Error("Não foi possível carregar " + excelFile);
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                
+                if (jsonData.length > 0) {
+                    displayTable(jsonData);
+                } else {
+                    document.getElementById('loading').innerText = "A planilha de estoque está vazia.";
+                }
+            } catch (error) {
+                document.getElementById('loading').innerText = "Erro ao carregar dados: " + error.message;
+            }
+        }
+
+        function formatCellValue(value) {
+            if (value === undefined || value === null) return '';
+
+            const stringValue = String(value).trim();
+            if (stringValue.startsWith('http://') || stringValue.startsWith('https://')) {
+                return `<a href="${stringValue}" target="_blank" class="excel-link">Acessar Link</a>`;
+            }
+
+            if (typeof value === 'number') {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+
+            return value;
+        }
+
+        function displayTable(data) {
+            const head = document.getElementById('table-head');
+            const body = document.getElementById('table-body');
+            
+            head.innerHTML = "";
+            body.innerHTML = "";
+
+            const headers = data[0];
+            let headRow = "<tr>";
+            headers.forEach(header => {
+                headRow += `<th>${header || ''}</th>`;
+            });
+            headRow += "</tr>";
+            head.innerHTML = headRow;
+
+            for (let i = 1; i < data.length; i++) {
+                let bodyRow = "<tr>";
+                for (let j = 0; j < headers.length; j++) {
+                    bodyRow += `<td>${formatCellValue(data[i][j])}</td>`;
+                }
+                bodyRow += "</tr>";
+                body.innerHTML += bodyRow;
+            }
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('excel-table').style.display = 'table';
+        }
+
+        loadExcel();
+    })();
+
+    function filterTable() {
+        const input = document.getElementById("search");
+        const filter = input.value.toUpperCase();
+        const table = document.getElementById("excel-table");
+        const tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            let rowContainsFilter = false;
+            const tds = tr[i].getElementsByTagName("td");
+            
+            for (let j = 0; j < tds.length; j++) {
+                if (tds[j] && tds[j].innerText.toUpperCase().indexOf(filter) > -1) {
+                    rowContainsFilter = true;
+                    break;
+                }
+            }
+            tr[i].style.display = rowContainsFilter ? "" : "none";
+        }
+    }
+</script>

@@ -1,0 +1,99 @@
+<header class="iastech-header">
+    <div class="header-container">
+        <div class="logo-area">
+            <a href="https://www.iastech.com/" target="_blank">
+                <span class="logo-text">IAS<span class="logo-highlight">TECH</span></span>
+            </a>
+        </div>
+
+        <nav class="navigation-menu">
+            <a href="https://www.iastech.com/quem-somos/" target="_blank" class="nav-link">Sobre a IASTECH</a>
+            <a href="#excel-table" class="nav-link">Planilha de Estoque</a>
+            <a href="https://www.iastech.com/contato/" target="_blank" class="nav-link btn-contact">Contato</a>
+        </nav>
+    </div>
+</header>
+
+<style>
+    .iastech-header {
+        background-color: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 15px 40px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .header-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Estilização provisória do Logo em Texto (mude para <img> se preferir) */
+    .logo-area a {
+        text-decoration: none;
+    }
+    .logo-text {
+        font-size: 24px;
+        font-weight: 800;
+        color: #0f172a; /* Preto azulado */
+        letter-spacing: -0.5px;
+    }
+    .logo-highlight {
+        color: #0056b3; /* Azul IASTECH */
+    }
+
+    /* Menu de Navegação */
+    .navigation-menu {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .nav-link {
+        text-decoration: none;
+        color: #334155; /* Cinza escuro */
+        font-weight: 600;
+        font-size: 15px;
+        transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+        color: #0056b3; /* Azul IASTECH no Hover */
+    }
+
+    /* Botão de Contato em Destaque (igual o botão preto da imagem que você enviou) */
+    .nav-link.btn-contact {
+        background-color: #0f172a; /* Preto fosco elegante */
+        color: #ffffff;
+        padding: 10px 22px;
+        border-radius: 6px;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .nav-link.btn-contact:hover {
+        background-color: #1e293b;
+        color: #ffffff;
+    }
+    
+    .nav-link.btn-contact:active {
+        transform: scale(0.98);
+    }
+
+    /* Responsividade para telas menores */
+    @media (max-width: 768px) {
+        .header-container {
+            flex-direction: column;
+            gap: 15px;
+        }
+        .navigation-menu {
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+</style>
