@@ -6,7 +6,7 @@
         </div>
         
         <div class="search-box">
-            <input type="text" id="search" onkeyup="filterTable()" placeholder="Digite termos chave para filtrar (Ex: Nome, Código, Status)...">
+            <input type="text" id="search" onkeyup="handleSearch()" placeholder="Digite termos chave para filtrar (Ex: Nome, Código, Status)...">
         </div>
 
         <div class="table-container">
@@ -18,6 +18,12 @@
                 <tbody id="table-body"></tbody>
             </table>
         </div>
+
+        <div id="pagination-controls" class="pagination" style="display: none;">
+            <button id="btn-prev" onclick="previousPage()">⬅️ Anterior</button>
+            <span id="page-indicator">Página 1 de 1</span>
+            <button id="btn-next" onclick="nextPage()">Próximo ➡️</button>
+        </div>
     </div>
 </section>
 
@@ -25,7 +31,7 @@
 
 <style>
     .main-content {
-        padding: 40px 20px;
+        padding: 30px 15px;
         background-color: #f8fafc;
     }
 
@@ -35,47 +41,44 @@
     }
 
     .content-header {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
 
     .content-header h2 {
-        font-size: 24px;
+        font-size: 22px;
         color: #0f172a;
         font-weight: 700;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
 
     .content-header p {
-        font-size: 14px;
+        font-size: 13px;
         color: #64748b;
     }
 
-    /* Barra de Pesquisa */
     .search-box {
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
 
     #search {
         width: 100%;
-        padding: 14px 16px;
-        font-size: 15px;
+        padding: 12px 14px;
+        font-size: 14px;
         border: 1px solid #cbd5e1;
         border-radius: 6px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         outline: none;
-        transition: border-color 0.2s, box-shadow 0.2s;
+        transition: border-color 0.2s;
     }
 
     #search:focus {
         border-color: #0056b3;
-        box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
     }
 
-    /* Container da Tabela */
+    /* Ajustes críticos para caber 100% na tela sem barra de rolagem horizontal */
     .table-container {
-        overflow-x: auto;
+        width: 100%;
         background: #ffffff;
-        padding: 10px;
+        padding: 5px;
         border-radius: 8px;
         border: 1px solid #e2e8f0;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -84,60 +87,89 @@
     table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 14px;
+        font-size: 12px; /* Fonte ligeiramente reduzida para economizar espaço */
+        table-layout: fixed; /* Força o navegador a respeitar o limite de 100% da largura */
     }
 
     th, td {
         border-bottom: 1px solid #e2e8f0;
-        padding: 14px 16px;
+        padding: 8px 6px; /* Reduzido drasticamente o espaçamento interno das colunas */
         text-align: center; 
         vertical-align: middle;
-        white-space: nowrap;
+        word-wrap: break-word; /* Permite quebras de linha em textos longos para não esticar a tabela */
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     th {
         background-color: #f1f5f9;
         color: #334155;
         font-weight: 700;
-        position: sticky;
-        top: 0;
     }
 
-    tr:last-child td {
-        border-bottom: none;
-    }
-
-    tr:nth-child(even) { 
-        background-color: #f8fafc; 
-    }
-
-    tr:hover { 
-        background-color: #f1f5f9; 
-    }
+    tr:nth-child(even) { background-color: #f8fafc; }
+    tr:hover { background-color: #f1f5f9; }
 
     .excel-link {
         color: #0056b3;
         text-decoration: none;
         font-weight: 600;
     }
+    .excel-link:hover { text-decoration: underline; }
 
-    .excel-link:hover {
-        text-decoration: underline;
+    /* Estilização dos Botões de Paginação */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+        font-size: 13px;
+    }
+
+    .pagination button {
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        color: #334155;
+        transition: all 0.2s;
+    }
+
+    .pagination button:hover(:disabled) {
+        background-color: #f1f5f9;
+        border-color: #94a3b8;
+    }
+
+    .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    #page-indicator {
+        color: #64748b;
+        font-weight: 600;
     }
 
     .loading {
-        padding: 40px;
+        padding: 30px;
         text-align: center;
         font-style: italic;
         color: #64748b;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
     }
 </style>
 
 <script>
+    // Variáveis globais de controle
+    let allData = [];         // Armazena as linhas puras do Excel (excluindo cabeçalho)
+    let filteredData = [];    // Armazena as linhas após o filtro de busca
+    let headers = [];         // Cabeçalhos da tabela
+    
+    let currentPage = 1;
+    const itemsPerPage = 20;   // Limite de 20 itens por página
+
     (function() {
         const excelFile = 'dados.xlsx'; 
 
@@ -156,7 +188,12 @@
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                 
                 if (jsonData.length > 0) {
-                    displayTable(jsonData);
+                    headers = jsonData[0]; // Captura a primeira linha
+                    allData = jsonData.slice(1); // Captura o restante dos dados
+                    filteredData = [...allData]; // Inicialmente, os dados filtrados são iguais a todos os dados
+                    
+                    displayHeaders();
+                    renderPage();
                 } else {
                     document.getElementById('loading').innerText = "A planilha de estoque está vazia.";
                 }
@@ -164,78 +201,108 @@
                 document.getElementById('loading').innerText = "Erro ao carregar dados: " + error.message;
             }
         }
-
-        // Nova lógica: Recebe também o nome da coluna para decidir como formatar
-        function formatCellValue(value, columnName) {
-            if (value === undefined || value === null) return '';
-
-            const stringValue = String(value).trim();
-            
-            // 1. Identifica hiperlinks automaticamente
-            if (stringValue.startsWith('http://') || stringValue.startsWith('https://')) {
-                return `<a href="${stringValue}" target="_blank" class="excel-link">Acessar Link</a>`;
-            }
-
-            // 2. Se for número e a coluna for especificamente "Valor Anunciado", formata como Moeda (R$)
-            if (typeof value === 'number' && columnName === 'Valor Anunciado') {
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            }
-
-            // 3. Para as demais colunas (incluindo "QTD"), retorna o valor normal/original
-            return value;
-        }
-
-        function displayTable(data) {
-            const head = document.getElementById('table-head');
-            const body = document.getElementById('table-body');
-            
-            head.innerHTML = "";
-            body.innerHTML = "";
-
-            const headers = data[0]; // Linha dos títulos das colunas
-            let headRow = "<tr>";
-            headers.forEach(header => {
-                headRow += `<th>${header || ''}</th>`;
-            });
-            headRow += "</tr>";
-            head.innerHTML = headRow;
-
-            for (let i = 1; i < data.length; i++) {
-                let bodyRow = "<tr>";
-                for (let j = 0; j < headers.length; j++) {
-                    const currentHeaderName = String(headers[j]).trim();
-                    // Passa o valor da célula e o nome da coluna correspondente
-                    const formattedValue = formatCellValue(data[i][j], currentHeaderName);
-                    bodyRow += `<td>${formattedValue}</td>`;
-                }
-                bodyRow += "</tr>";
-                body.innerHTML += bodyRow;
-            }
-
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('excel-table').style.display = 'table';
-        }
-
         loadExcel();
     })();
 
-    function filterTable() {
+    function formatCellValue(value, columnName) {
+        if (value === undefined || value === null) return '';
+        const stringValue = String(value).trim();
+        
+        if (stringValue.startsWith('http://') || stringValue.startsWith('https://')) {
+            return `<a href="${stringValue}" target="_blank" class="excel-link">Acessar Link</a>`;
+        }
+
+        if (typeof value === 'number' && columnName === 'Valor Anunciado') {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        return value;
+    }
+
+    function displayHeaders() {
+        const head = document.getElementById('table-head');
+        let headRow = "<tr>";
+        headers.forEach(header => {
+            headRow += `<th>${header || ''}</th>`;
+        });
+        headRow += "</tr>";
+        head.innerHTML = headRow;
+    }
+
+    // Renderiza especificamente as 20 linhas da página atual
+    function renderPage() {
+        const body = document.getElementById('table-body');
+        body.innerHTML = "";
+
+        // Calcula os índices de corte (ex: para pág 1, de 0 a 20. Para pág 2, de 20 a 40)
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filteredData.slice(startIndex, endIndex);
+
+        if (pageItems.length === 0) {
+            body.innerHTML = `<tr><td colspan="${headers.length}">Nenhum resultado encontrado.</td></tr>`;
+            updatePaginationControls(0);
+            return;
+        }
+
+        pageItems.forEach(row => {
+            let bodyRow = "<tr>";
+            for (let j = 0; j < headers.length; j++) {
+                const currentHeaderName = String(headers[j]).trim();
+                const formattedValue = formatCellValue(row[j], currentHeaderName);
+                bodyRow += `<td>${formattedValue}</td>`;
+            }
+            bodyRow += "</tr>";
+            body.innerHTML += bodyRow;
+        });
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('excel-table').style.display = 'table';
+        
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        updatePaginationControls(totalPages);
+    }
+
+    function updatePaginationControls(totalPages) {
+        const controls = document.getElementById('pagination-controls');
+        if (totalPages <= 1 && filteredData.length === allData.length) {
+            controls.style.display = 'none'; // Esconde se tudo couber em 1 página e não houver busca ativa
+            return;
+        }
+        
+        controls.style.display = 'flex';
+        document.getElementById('page-indicator').innerText = `Página ${currentPage} de ${totalPages || 1}`;
+        document.getElementById('btn-prev').disabled = (currentPage === 1);
+        document.getElementById('btn-next').disabled = (currentPage === totalPages || totalPages === 0);
+    }
+
+    // Avançar e Voltar páginas
+    function previousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage();
+        }
+    }
+
+    function nextPage() {
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderPage();
+        }
+    }
+
+    // Nova dinâmica de busca inteligente que opera na lista global
+    function handleSearch() {
         const input = document.getElementById("search");
         const filter = input.value.toUpperCase();
-        const table = document.getElementById("excel-table");
-        const tr = table.getElementsByTagName("tr");
 
-        for (let i = 1; i < tr.length; i++) {
-            let rowContainsFilter = false;
-            const tds = tr[i].getElementsByTagName("td");
-            
-            for (let j = 0; j < tds.length; j++) {
-                if (tds[j] && tds[j].innerText.toUpperCase().indexOf(filter) > -1) {
-                    rowContainsFilter = true;
-                    break;
-                }
-            }
-            tr[i].style.display = rowContainsFilter ? "" : "none";
-        }
+        // Filtra a matriz global de dados inteira
+        filteredData = allData.filter(row => {
+            return row.some(cell => cell !== undefined && String(cell).toUpperCase().includes(filter));
+        });
+
+        currentPage = 1; // Reseta para a primeira página dos novos resultados buscados
+        renderPage();
     }
 </script>
