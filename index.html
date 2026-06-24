@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IASTECH - Painel de Controle</title>
     <style>
-        /* Estilos globais para garantir que não haja margens indesejadas */
+        /* Estilos globais para garantir a estrutura correta da página */
         * {
             margin: 0;
             padding: 0;
@@ -20,7 +20,7 @@
             min-height: 100vh;
         }
         main {
-            flex: 1; /* Garante que o rodapé fique sempre embaixo se houver pouca linha */
+            flex: 1; /* Empurra o rodapé para a parte inferior da tela */
         }
     </style>
 </head>
@@ -31,24 +31,26 @@
     <div id="footer-container"></div>
 
     <script>
-        // Função para carregar componentes HTML dinamicamente
+        // Função responsável por buscar e injetar o HTML dos arquivos separados
         async function loadComponent(elementId, filePath) {
             try {
                 const response = await fetch(filePath);
-                if (!response.ok) throw new Error(`Erro ao carregar ${filePath}`);
+                if (!response.ok) throw new Error(`Erro ao carregar o arquivo: ${filePath}`);
+                
                 const html = await response.text();
                 document.getElementById(elementId).innerHTML = html;
 
-                // ATENÇÃO: Se o componente carregado tiver tags <script>, precisamos executá-las manualmente
+                // Executa os scripts internos do body se ele for o elemento carregado
                 if (elementId === 'body-container') {
                     executeScripts(document.getElementById(elementId));
                 }
             } catch (error) {
-                console.error(error);
+                console.error("Falha na montagem do componente:", error);
+                document.getElementById(elementId).innerHTML = `<p style="padding: 20px; color: red; text-align: center;">Erro ao carregar o componente ${filePath}. Verifique se o arquivo existe na pasta.</p>`;
             }
         }
 
-        // Função auxiliar para fazer o JavaScript do arquivo body.html funcionar após o fetch
+        // Garante a ativação de códigos JavaScript que venham de dentro do body.html
         function executeScripts(container) {
             const scripts = container.querySelectorAll("script");
             scripts.forEach(oldScript => {
@@ -59,11 +61,11 @@
             });
         }
 
-        // Carrega todos os componentes ao iniciar a página
+        // Executa o carregamento de todos os três arquivos em paralelo ao abrir a página
         window.onload = function() {
             loadComponent('header-container', 'header.html');
             loadComponent('body-container', 'body.html');
-            // loadComponent('footer-container', 'footer.html'); // Ativaremos assim que criarmos o footer!
+            loadComponent('footer-container', 'footer.html'); // Carregamento do rodapé garantido aqui
         };
     </script>
 </body>
