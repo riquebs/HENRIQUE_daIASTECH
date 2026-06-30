@@ -1,11 +1,15 @@
 <section class="main-content">
     <div class="content-container">
         <div class="content-header">
-            <h2>📊 Consulta de Estoque Online</h2>
+            <!-- Título Atualizado -->
+            <h2>📊 Consulta de Estoque Online - Produtos IASTECH</h2>
+            <!-- Primeiro Parágrafo -->
             <p>Visualize e pesquise as informações atualizadas de estoque. Os dados abaixo são de caráter consultivo e não editáveis.</p>
-            <p>Em casos do sistema retornar "Erro ao carregar dados: XLSX is not defined", sugerimos que faça o recarregamento de toda a página (F5).</p>
+            <!-- Segundo Parágrafo com o aviso de recarregamento e termo em negrito -->
+            <p class="alert-text">Em casos do sistema retornar <strong>'Erro ao carregar dados: XLSX is not defined'</strong>, sugerimos que faça o recarregamento de toda a página (F5).</p>
         </div>
         
+        <!-- Barra de busca para navegar nos dados -->
         <div class="search-box">
             <input type="text" id="search" onkeyup="handleSearch()" placeholder="Digite termos chave para filtrar (Ex: Nome, Código, Status)...">
         </div>
@@ -20,6 +24,7 @@
             </table>
         </div>
 
+        <!-- Controles de Paginação -->
         <div id="pagination-controls" class="pagination" style="display: none;">
             <button id="btn-prev" onclick="previousPage()">⬅️ Anterior</button>
             <span id="page-indicator">Página 1 de 1</span>
@@ -28,148 +33,154 @@
     </div>
 </section>
 
+<!-- SECTION: Informações de Classificação e Contato -->
+<section class="info-section">
+    <div class="info-container">
+        
+        <!-- Bloco 1: Classificação de Produtos -->
+        <div class="info-block">
+            <h3>📋 Descrição das classificações dos produtos</h3>
+            <p class="subtitle">Todos os produtos são 100% funcionais e testados – condições relacionadas apenas à estética do produto (invólucro).</p>
+            
+            <div class="classification-cards">
+                <div class="card status-excelente">
+                    <h4>✨ Excelente (Novo)</h4>
+                    <p>Produto sem sinais de uso ou com arranhões leves e quase imperceptíveis provenientes de transporte, com estética superior a 95%. Em alguns casos o produto pode estar 100% novo, lacrado na caixa do fabricante e sem uso.</p>
+                </div>
+                
+                <div class="card status-muitobom">
+                    <h4>👍 Muito Bom (Semi-Novo)</h4>
+                    <p>Produto com poucos sinais de uso, podendo conter poucos arranhões, riscos e/ou amassados leves provenientes de testes em bancada ou poucos dias de uso, com estética entre 85% e 95%.</p>
+                </div>
+                
+                <div class="card status-bom">
+                    <h4>🔧 Bom (Usado)</h4>
+                    <p>Produto com sinais de uso mais visíveis, porém, que não interferem no uso. Podem ser arranhões, riscos e/ou amassados, partes descascadas e/ou mais escuras, provenientes de um uso mais prolongado em projetos, com estética entre 60% e 85%.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloco 2: Informações Importantes (Embalagens) -->
+        <div class="info-block grid-two-columns">
+            <div class="packaging-info">
+                <h3>📦 Informações Importantes</h3>
+                <div class="info-item">
+                    <strong>Para produtos Novos:</strong>
+                    <p>Será enviado na embalagem original do fabricante, podendo estar ou não lacrada com o selo do fabricante.</p>
+                </div>
+                <div class="info-item">
+                    <strong>Para produtos Semi-novos e Usados:</strong>
+                    <p>Poderá ser enviado nas seguintes condições: <strong>a)</strong> na embalagem original (sem lacre), <strong>b)</strong> em uma embalagem de papel ou envelope genérico revestido com proteção contra impacto.</p>
+                </div>
+            </div>
+
+            <!-- Bloco 3: Suporte e Contato Direto -->
+            <div class="contact-card">
+                <h3>💬 Dúvidas ou Links Quebrados?</h3>
+                <p>Em caso de quebra de links (não funcionamento) ou qualquer dúvida referente aos produtos ofertados, você pode contactar diretamente:</p>
+                
+                <div class="profile-box">
+                    <div class="profile-details">
+                        <h4>Henrique Bittencourt</h4>
+                        <p class="role">Gerente de Desenvolvimento de Negócios</p>
+                        <p class="company">IASTECH</p>
+                    </div>
+                </div>
+
+                <div class="contact-links">
+                    <a href="mailto:henrique.bittencourt@iastech.com" class="contact-btn email-btn">
+                        ✉️ henrique.bittencourt@iastech.com
+                    </a>
+                    <a href="https://wa.me/5511994356599" target="_blank" class="contact-btn whats-btn">
+                        🟢 (11) 99435-6599
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Biblioteca SheetJS (XLSX) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
+    /* Estilos do Conteúdo Principal (Tabela) */
     .main-content {
-        padding: 30px 15px;
+        padding: 40px 15px;
         background-color: #f8fafc;
     }
+    .content-container { max-width: 1200px; margin: 0 auto; }
+    .content-header { margin-bottom: 20px; }
+    .content-header h2 { font-size: 22px; color: #0f172a; font-weight: 700; margin-bottom: 6px; }
+    .content-header p { font-size: 13px; color: #64748b; margin-bottom: 4px; }
+    
+    /* Pequeno ajuste estético para o novo aviso */
+    .content-header .alert-text { color: #b91c1c; font-size: 12.5px; margin-top: 6px; }
 
-    .content-container {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .content-header {
-        margin-bottom: 20px;
-    }
-
-    .content-header h2 {
-        font-size: 22px;
-        color: #0f172a;
-        font-weight: 700;
-        margin-bottom: 6px;
-    }
-
-    .content-header p {
-        font-size: 13px;
-        color: #64748b;
-    }
-
-    .search-box {
-        margin-bottom: 15px;
-    }
-
-    #search {
-        width: 100%;
-        padding: 12px 14px;
-        font-size: 14px;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        outline: none;
-        transition: border-color 0.2s;
-    }
-
-    #search:focus {
-        border-color: #0056b3;
-    }
-
-    /* Ajustes críticos para caber 100% na tela sem barra de rolagem horizontal */
-    .table-container {
-        width: 100%;
-        background: #ffffff;
-        padding: 5px;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px; /* Fonte ligeiramente reduzida para economizar espaço */
-        table-layout: fixed; /* Força o navegador a respeitar o limite de 100% da largura */
-    }
-
-    th, td {
-        border-bottom: 1px solid #e2e8f0;
-        padding: 8px 6px; /* Reduzido drasticamente o espaçamento interno das colunas */
-        text-align: center; 
-        vertical-align: middle;
-        word-wrap: break-word; /* Permite quebras de linha em textos longos para não esticar a tabela */
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    th {
-        background-color: #f1f5f9;
-        color: #334155;
-        font-weight: 700;
-    }
-
+    .search-box { margin-bottom: 15px; }
+    #search { width: 100%; padding: 12px 14px; font-size: 14px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; }
+    #search:focus { border-color: #0056b3; }
+    
+    .table-container { width: 100%; background: #ffffff; padding: 5px; border-radius: 8px; border: 1px solid #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+    th, td { border-bottom: 1px solid #e2e8f0; padding: 8px 6px; text-align: center; vertical-align: middle; word-wrap: break-word; overflow: hidden; text-overflow: ellipsis; }
+    th { background-color: #f1f5f9; color: #334155; font-weight: 700; }
     tr:nth-child(even) { background-color: #f8fafc; }
     tr:hover { background-color: #f1f5f9; }
-
-    .excel-link {
-        color: #0056b3;
-        text-decoration: none;
-        font-weight: 600;
-    }
+    .excel-link { color: #0056b3; text-decoration: none; font-weight: 600; }
     .excel-link:hover { text-decoration: underline; }
 
-    /* Estilização dos Botões de Paginação */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 15px;
-        margin-top: 20px;
-        font-size: 13px;
-    }
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; font-size: 13px; }
+    .pagination button { background-color: #ffffff; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+    .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+    #page-indicator { color: #64748b; font-weight: 600; }
+    .loading { padding: 30px; text-align: center; color: #64748b; }
 
-    .pagination button {
-        background-color: #ffffff;
-        border: 1px solid #cbd5e1;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: 600;
-        color: #334155;
-        transition: all 0.2s;
+    /* Estilização da Seção de Classificação (Escura) */
+    .info-section {
+        background-color: #0f172a; 
+        color: #f1f5f9;
+        padding: 60px 20px;
+        border-top: 4px solid #e30613; 
     }
+    .info-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 50px; }
+    .info-block h3 { font-size: 18px; color: #ffffff; margin-bottom: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .info-block .subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 25px; }
+    .classification-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .card { background-color: #1e293b; padding: 20px; border-radius: 8px; border-left: 5px solid transparent; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2); }
+    .card h4 { font-size: 15px; margin-bottom: 10px; font-weight: 700; }
+    .card p { font-size: 13px; color: #cbd5e1; line-height: 1.6; }
+    .status-excelente { border-left-color: #10b981; } 
+    .status-muitobom { border-left-color: #3b82f6; }  
+    .status-bom { border-left-color: #f59e0b; }       
+    .grid-two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .info-item { background: #1e293b; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
+    .info-item strong { display: block; font-size: 14px; color: #ffffff; margin-bottom: 5px; }
+    .info-item p { font-size: 13px; color: #cbd5e1; margin: 0; }
+    .contact-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; padding: 25px; border-radius: 8px; }
+    .contact-card p { font-size: 13px; color: #94a3b8; margin-bottom: 20px; }
+    .profile-box { border-bottom: 1px solid #334155; padding-bottom: 15px; margin-bottom: 20px; }
+    .profile-details h4 { font-size: 16px; color: #ffffff; margin-bottom: 2px; }
+    .profile-details .role { font-size: 13px; color: #3b82f6; margin-bottom: 2px; font-weight: 600; }
+    .profile-details .company { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+    .contact-links { display: flex; flex-direction: column; gap: 10px; }
+    .contact-btn { display: block; text-align: center; padding: 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; transition: transform 0.2s, filter 0.2s; }
+    .contact-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .email-btn { background-color: #334155; color: #ffffff; }
+    .whats-btn { background-color: #16a34a; color: #ffffff; }
 
-    .pagination button:hover(:disabled) {
-        background-color: #f1f5f9;
-        border-color: #94a3b8;
-    }
-
-    .pagination button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    #page-indicator {
-        color: #64748b;
-        font-weight: 600;
-    }
-
-    .loading {
-        padding: 30px;
-        text-align: center;
-        font-style: italic;
-        color: #64748b;
+    @media (max-width: 850px) {
+        .grid-two-columns { grid-template-columns: 1fr; gap: 30px; }
     }
 </style>
 
 <script>
-    // Variáveis globais de controle
-    let allData = [];         // Armazena as linhas puras do Excel (excluindo cabeçalho)
-    let filteredData = [];    // Armazena as linhas após o filtro de busca
-    let headers = [];         // Cabeçalhos da tabela
-    
+    let allData = [];         
+    let filteredData = [];    
+    let headers = [];         
     let currentPage = 1;
-    const itemsPerPage = 20;   // Limite de 20 itens por página
+    const itemsPerPage = 20;   
 
     (function() {
         const excelFile = 'dados.xlsx'; 
@@ -189,9 +200,9 @@
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                 
                 if (jsonData.length > 0) {
-                    headers = jsonData[0]; // Captura a primeira linha
-                    allData = jsonData.slice(1); // Captura o restante dos dados
-                    filteredData = [...allData]; // Inicialmente, os dados filtrados são iguais a todos os dados
+                    headers = jsonData[0]; 
+                    allData = jsonData.slice(1); 
+                    filteredData = [...allData]; 
                     
                     displayHeaders();
                     renderPage();
@@ -230,12 +241,10 @@
         head.innerHTML = headRow;
     }
 
-    // Renderiza especificamente as 20 linhas da página atual
     function renderPage() {
         const body = document.getElementById('table-body');
         body.innerHTML = "";
 
-        // Calcula os índices de corte (ex: para pág 1, de 0 a 20. Para pág 2, de 20 a 40)
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const pageItems = filteredData.slice(startIndex, endIndex);
@@ -267,7 +276,7 @@
     function updatePaginationControls(totalPages) {
         const controls = document.getElementById('pagination-controls');
         if (totalPages <= 1 && filteredData.length === allData.length) {
-            controls.style.display = 'none'; // Esconde se tudo couber em 1 página e não houver busca ativa
+            controls.style.display = 'none'; 
             return;
         }
         
@@ -277,7 +286,6 @@
         document.getElementById('btn-next').disabled = (currentPage === totalPages || totalPages === 0);
     }
 
-    // Avançar e Voltar páginas
     function previousPage() {
         if (currentPage > 1) {
             currentPage--;
@@ -293,17 +301,15 @@
         }
     }
 
-    // Nova dinâmica de busca inteligente que opera na lista global
     function handleSearch() {
         const input = document.getElementById("search");
         const filter = input.value.toUpperCase();
 
-        // Filtra a matriz global de dados inteira
         filteredData = allData.filter(row => {
             return row.some(cell => cell !== undefined && String(cell).toUpperCase().includes(filter));
         });
 
-        currentPage = 1; // Reseta para a primeira página dos novos resultados buscados
+        currentPage = 1; 
         renderPage();
     }
 </script>

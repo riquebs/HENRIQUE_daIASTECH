@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IASTECH - Painel de Controle</title>
+    <!-- Novo título da aba do navegador -->
+    <title>IASTECH - Estoque</title>
+    
+    <!-- Favicon Oficial da IASTECH adicionado aqui -->
+    <link rel="icon" type="image/png" href="https://www.iastech.com/wp-content/uploads/2020/09/grupo-27603@2x-144802.png">
+    
     <style>
         /* Estilos globais para garantir a estrutura correta da página */
         * {
@@ -26,6 +31,7 @@
 </head>
 <body>
 
+    <!-- Blocos estruturais da Landing Page -->
     <div id="header-container"></div>
     <main id="body-container"></main>
     <div id="footer-container"></div>
@@ -65,7 +71,7 @@
         window.onload = function() {
             loadComponent('header-container', 'header.html');
             loadComponent('body-container', 'body.html');
-            loadComponent('footer-container', 'footer.html'); // Carregamento do rodapé garantido aqui
+            loadComponent('footer-container', 'footer.html');
         };
     </script>
 </body>
