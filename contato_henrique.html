@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henrique Bittencourt | IASTECH</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f1f5f9; /* Alinhado ao tom cinza do sistema de estoque */
+            margin: 0;
+            padding: 0;
+            color: #334155;
+        }
+
+        .profile-container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Card de Apresentação Principal */
+        .profile-card {
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .cover-photo {
+            height: 220px;
+            background: #0f172a linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* Mini-banner ou texto institucional dentro da capa simulando a imagem */
+        .cover-event-tag {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #38bdf8;
+            padding: 8px 12px;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 11px;
+            text-align: right;
+            backdrop-filter: blur(4px);
+        }
+
+        .avatar-container {
+            position: absolute;
+            top: 130px;
+            left: 30px;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+            background-color: #cbd5e1;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .profile-info {
+            padding: 70px 30px 30px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .info-left h1 { font-size: 24px; margin: 0 0 6px 0; color: #0f172a; font-weight: 700; }
+        .info-left .headline { font-size: 15px; color: #475569; margin: 0 0 12px 0; line-height: 1.4; max-width: 550px; }
+        .info-left .location { font-size: 13px; color: #64748b; }
+
+        .info-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .company-logo-mini {
+            width: 24px;
+            height: 24px;
+            background-color: #e30613; /* Vermelho IASTECH */
+            border-radius: 4px;
+        }
+
+        /* Seções de Bloco Estilo LinkedIn */
+        .section-card {
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .section-card h2 {
+            font-size: 19px;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .about-text {
+            font-size: 14.5px;
+            color: #475569;
+            line-height: 1.6;
+            margin: 0;
+            white-space: pre-line;
+        }
+
+        /* Listas de Experiência e Educação */
+        .timeline-group {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+        }
+
+        .timeline-logo {
+            width: 48px;
+            height: 48px;
+            background-color: #f1f5f9;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .timeline-details { flex-grow: 1; }
+        .timeline-details h3 { font-size: 16px; margin: 0 0 4px 0; color: #0f172a; font-weight: 700; }
+        .timeline-details .institution { font-size: 14px; color: #334155; margin: 0 0 4px 0; font-weight: 600; }
+        .timeline-details .period { font-size: 13px; color: #64748b; margin: 0 0 4px 0; }
+        .timeline-details .location-intern { font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+
+        /* Sub-itens para múltiplos cargos na mesma empresa */
+        .sub-roles {
+            margin-top: 15px;
+            padding-left: 15px;
+            border-left: 2px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .sub-role-item h4 { font-size: 15px; margin: 0 0 2px 0; color: #0f172a; font-weight: 600; }
+
+        /* Destaques / Publicações */
+        .featured-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .featured-card .tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #0056b3;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .featured-card h3 { font-size: 16px; margin: 0; color: #0f172a; }
+        .featured-card p { font-size: 13px; color: #64748b; margin: 0; line-height: 1.5; }
+
+        /* Idiomas */
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .lang-item h3 { font-size: 15px; margin: 0 0 4px 0; color: #0f172a; font-weight: 700; }
+        .lang-item p { font-size: 13px; color: #64748b; margin: 0; }
+
+        @media (max-width: 600px) {
+            .profile-info { padding-top: 90px; }
+            .avatar-container { top: 150px; left: 50%; transform: translateX(-50%); }
+            .avatar { width: 110px; height: 110px; }
+            .cover-photo { height: 200px; }
+            .cover-event-tag { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+
+    <!-- CORD PRINCIPAL (BASEADO NA IMAGE_823C75.PNG) -->
+    <div class="profile-card">
+        <div class="cover-photo">
+            <div class="cover-event-tag">
+                <strong>IASTECH INNOVATION DAY</strong><br>
+                IA, Dados e Eficiência Operacional<br>
+                02/09/2026 • Indaiatuba, SP
+            </div>
+        </div>
+        <div class="avatar-container">
+            <!-- Certifique-se de ter sua foto salva como 'henrique.jpg' na mesma pasta -->
+            <img src="henrique.jpg" alt="Henrique Bittencourt" class="avatar">
+        </div>
+        <div class="profile-info">
+            <div class="info-left">
+                <h1>Henrique Bittencourt</h1>
+                <p class="headline">Gerente de Negócios na IASTECH | IT/OT | DCS | CLP | SCADA | IHM | MES | IIOT | Automação Industrial</p>
+                <p class="location">Salto, São Paulo, Brasil</p>
+            </div>
+            <div class="info-right">
+                <div class="company-logo-mini"></div>
+                <span>IASTECH Automação Industrial</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO: SOBRE (BASEADO NA IMAGE_823CAC.PNG) -->
+    <div class="section-card">
+        <h2>Sobre</h2>
+        <div class="about-text">Muito prazer, meu nome é Henrique e eu atuo no ramo da automação industrial e integração de sistemas computadorizados.
+
+Falo sobre transformação digital, automação de processos, indústria 4.0 e convergência IT/OT.
+
+Atualmente, trabalho de maneira contínua com soluções completas e otimizadas para automação industrial e gestão da produção, através de projetos que atendam do mais básico ao mais complexo visando a melhoria contínua dos processos industriais, além da automatização, otimização de recursos e gerenciamento de KPI's para tomadas de decisões.
+
+Tenho o prazer de atender alguns dos maiores segmentos do mercado nacional e internacional, sendo eles CPG, Alimentos, Bebidas, Química, Biotecnologia, Farmacêutica, Cosméticos, Saneamento e Celulose.
+
+Também já tive a oportunidade de atuar em projetos com Saúde Animal, Nutrição e também Siderurgia.
+
+<strong>Principais disciplinas que atuo no segmento de processos:</strong>
+- Controle de processos - PLC / DCS / HMI
+- Gerenciamento e Controle Batch / ISA 88
+- Sistemas BMS | CIP | HVAC | PW | WFI | Black Utilities
+- Relatórios personalizados e historização de variáveis (PIMS)
+- Consultoria em Redes e Cibersegurança | IEC 62443
+- Indústria 4.0 | IIOT | MQTT | Coleta e Visualização de Dados
+
+<strong>Principais disciplinas que atuo no segmento de consultoria e planejamento:</strong>
+- Sistemas MES | Pesagem | Conformidade ISA-95
+- Rastreabilidade e Audit Trail | 21 CFR PART 11 | RDC 658/2022
+- Projetos Básico | Executivo | Plano Diretor de Automação (PDA)</div>
+    </div>
+
+    <!-- SEÇÃO: DESTAQUES / PUBLICAÇÕES (BASEADO NO BANNER DA IMAGE_823C75.PNG) -->
+    <div class="section-card">
+        <h2>Destaque</h2>
+        <div class="featured-card">
+            <span class="tag">Evento Institucional</span>
+            <h3>IASTECH Innovation Day 2026</h3>
+            <p>Organização e desenvolvimento de negócios focados em Inteligência Artificial, Engenharia de Dados e Eficiência Operacional aplicada à indústria moderna. Evento realizado em Indaiatuba, SP.</p>
+        </div>
+    </div>
+
+    <!-- SEÇÃO: EXPERIÊNCIA (BASEADO NA IMAGE_823F79.PNG) -->
+    <div class="section-card">
+        <h2>Experiência</h2>
+        <div class="timeline-group">
+            
+            <!-- Grupo IASTECH -->
+            <div class="timeline-item">
+                <div class="timeline-logo">🏭</div>
+                <div class="timeline-details">
+                    <span class="institution">IASTECH Automação Industrial</span>
+                    <p class="period">3 anos 4 meses</p>
+                    
+                    <div class="sub-roles">
+                        <div class="sub-role-item">
+                            <h4>Gerente de desenvolvimento de negócios</h4>
+                            <p class="period">abr. de 2024 - o momento • 2 anos 3 meses</p>
+                            <p class="location-intern">Indaiatuba, São Paulo, Brasil</p>
+                        </div>
+                        <div class="sub-role-item">
+                            <h4>Orçamentista</h4>
+                            <p class="period">mar. de 2023 - abr. de 2024 • 1 ano 2 meses</p>
+                            <p class="location-intern">Indaiatuba, São Paulo, Brasil</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grupo Base Automação -->
+            <div class="timeline-item">
+                <div class="timeline-logo">⚙️</div>
+                <div class="timeline-details">
+                    <span class="institution">Base Automação</span>
+                    <p class="period">7 anos 2 meses</p>
+                    
+                    <div class="sub-roles">
+                        <div class="sub-role-item">
+                            <h4>Líder Comercial PL</h4>
+                            <p class="period">out. de 2022 - mar. de 2023 • 6 meses</p>
+                            <p class="location-intern">Salto, São Paulo, Brasil</p>
+                        </div>
+                        <div class="sub-role-item">
+                            <h4>Líder comercial</h4>
+                            <p class="period">mar. de 2020 - out. de 2022 • 2 anos 8 meses</p>
+                        </div>
+                        <div class="sub-role-item">
+                            <h4>Orçamentista Técnico PL</h4>
+                            <p class="period">out. de 2018 - mar. de 2020 • 1 ano 6 meses</p>
+                        </div>
+                        <div class="sub-role-item">
+                            <h4>Orçamentista Técnico JR</h4>
+                            <p class="period">dez. de 2016 - out. de 2018 • 1 ano 11 meses</p>
+                            <p class="location-intern">Salto, São Paulo</p>
+                        </div>
+                        <div class="sub-role-item">
+                            <h4>Estagiário de Orçamentista Técnico</h4>
+                            <p class="period">fev. de 2016 - dez. de 2016 • 11 meses</p>
+                            <p class="location-intern">Salto, São Paulo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SEÇÃO: FORMAÇÃO ACADÊMICA (BASEADO NA IMAGE_823FB3.PNG) -->
+    <div class="section-card">
+        <h2>Formação acadêmica</h2>
+        <div class="timeline-group">
+            
+            <div class="timeline-item">
+                <div class="timeline-logo">🎓</div>
+                <div class="timeline-details">
+                    <span class="institution">Centro Universitário Nossa Senhora do Patrocínio - CEUNSP</span>
+                    <h3>Curso Superior de Tecnologia (CST)</h3>
+                    <p class="period">2022 - 2023</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-logo">🎓</div>
+                <div class="timeline-details">
+                    <span class="institution">Universidade Anhanguera São Paulo</span>
+                    <h3>Bacharelado</h3>
+                    <p class="period">2017 - 2020</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-logo">🎓</div>
+                <div class="timeline-details">
+                    <span class="institution">Instituto Federal de Educação, Ciência e Tecnologia de São Paulo - IFSP</span>
+                    <h3>Técnico</h3>
+                    <p class="period">2015 - 2016</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-logo">🎓</div>
+                <div class="timeline-details">
+                    <span class="institution">SENAI São Paulo</span>
+                    <h3>CAI</h3>
+                    <p class="period">2013 - 2014</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SEÇÃO: IDIOMAS (BASEADO NA IMAGE_823FD8.PNG) -->
+    <div class="section-card">
+        <h2>Idiomas</h2>
+        <div class="lang-grid">
+            <div class="lang-item">
+                <h3>Português</h3>
+                <p>Fluente ou nativo</p>
+            </div>
+            <div class="lang-item">
+                <h3>Inglês</h3>
+                <p>Nível básico a intermediário</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
